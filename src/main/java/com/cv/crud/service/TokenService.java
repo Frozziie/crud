@@ -1,6 +1,9 @@
 package com.cv.crud.service;
 
+import com.cv.crud.dto.LoginDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -18,11 +21,20 @@ public class TokenService {
 
     private final JwtEncoder encoder;
 
-    public TokenService(JwtEncoder encoder) {
+    private final AuthenticationManager authManager;
+
+    public TokenService(JwtEncoder encoder, AuthenticationManager authManager) {
         this.encoder = encoder;
+        this.authManager = authManager;
     }
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(LoginDTO loginDTO) {
+
+        log.debug("Token requested from user: {}", loginDTO.getUsername());
+
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginDTO.getUsername(), loginDTO.getPassword()));
+
         Instant now = Instant.now();
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -34,6 +46,7 @@ public class TokenService {
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .build();
+
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 }
