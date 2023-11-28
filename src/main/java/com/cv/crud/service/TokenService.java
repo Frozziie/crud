@@ -30,10 +30,10 @@ public class TokenService {
 
     public String generateToken(LoginDTO loginDTO) {
 
-        log.debug("Token requested from user: {}", loginDTO.getUsername());
+        log.debug("Token requested from user: {}", loginDTO.getEmail());
 
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDTO.getUsername(), loginDTO.getPassword()));
+                loginDTO.getEmail(), loginDTO.getPassword()));
 
         Instant now = Instant.now();
         String scope = authentication.getAuthorities().stream()
@@ -44,7 +44,7 @@ public class TokenService {
                 .issuedAt(now)
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject(authentication.getName())
-                .claim("scope", scope)
+                .claim("scope", scope) /* Mapeamos todos los GrantedAuthority(roles/autoridades) por alcances JWT. */
                 .build();
 
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

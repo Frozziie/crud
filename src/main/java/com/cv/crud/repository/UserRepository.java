@@ -1,13 +1,12 @@
 package com.cv.crud.repository;
 
+import com.cv.crud.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.cv.crud.entity.User;
-
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-	User findByUsername(String username);
+	UserEntity findByEmail(String email);
 	
 }
