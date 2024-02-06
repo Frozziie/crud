@@ -1,7 +1,5 @@
 package com.cv.crud.configuration;
 
-import javax.sql.DataSource;
-
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -14,7 +12,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,7 +26,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true) /* Se utiliza para habilitar el uso de anotaciones como @PreAuthorize */
@@ -66,9 +63,9 @@ public class SecurityConfig {
 	DataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("org.postgresql.Driver");
-		dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
+		dataSource.setUrl("jdbc:postgresql://dbpostgresql:5432/mydb");
 		dataSource.setUsername("postgres");
-		dataSource.setPassword("casona");
+		dataSource.setPassword("password");
 		return dataSource;
 	};
 	
