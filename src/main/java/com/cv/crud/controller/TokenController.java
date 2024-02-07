@@ -16,7 +16,7 @@ public class TokenController {
     TokenService tokenService;
 
     @PostMapping("/token")
-    public Object getToken(@RequestBody LoginDTO loginDTO) {
+    public String getToken(@RequestBody LoginDTO loginDTO) {
         return tokenService.generateToken(loginDTO);
     }
 }
